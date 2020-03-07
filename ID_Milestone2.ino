@@ -1,52 +1,74 @@
 /*
-	Milestone 2
-	Created by Risa Philpott & Bernie Cieplak
-	Parts taken from the following website for LCD Code:
-	http://www.arduino.cc/en/Tutorial/LiquidCrystalDisplay <- code in the public domain
+
+	Title: Smart Home - Milestone 2
+	Authors: Risa Philpott & Bernie Cieplak
+	Created: February 27, 2020
+	Last Modified: March 7, 2020 by Bernie Cieplak
 	
 */
 
-// include the library code:
+// LCD library
 #include <LiquidCrystal.h>
 
 // definitions
-#define INTRUDER_SOUND 6 // intruder speaker output
-#define INTRUDER_LED 13 //intruder alert LED is connected to pin 13
-#define INTRUDER_INPUT 1 //analog input pin one
-#define NIGHT_OUTPUT 10 // night light output LED pin
-#define NIGHT_INPUT 0 // night light input pin - light sensor
-#define WEATHER_INPUT 2 // weather station temperature sensor input
-#define WEATHER_OUTPUT 9 // weather station appliance output
-#define SWITCH_INPUT 3 // smart switch input
+// analog pin definitions
+#define INTRUDER_INPUT 0 // intruder alert analog button input
+#define NIGHT_INPUT 1 // night light analog light sensor input
+#define SWITCH_INPUT 2 // smart switch analog input
+#define WEATHER_INPUT 3 // weather station temperature analog input
+
+// digital pin definitions
+#define INTRUDER_LED 13 // intruder alert LED
+#define LCD_PIN6 12 // LCD pin 6
+#define LCD_PIN5 11 // LCD pin 5
+#define LCD_PIN4 10 // LCD pin 4
+#define LCD_PIN3 9 // LCD pin 3
 #define SWITCH_OUTPUT 8 // smart switch output
+#define WEATHER_OUTPUT 7 // weather station appliance output
+// PIN 6 NOT USED
+#define LCD_PIN2 5 // LCD pin 2
+#define LCD_PIN1 4 // LCD pin 1
+#define INTRUDER_SOUND 3 // intruder speaker output
+#define NIGHT_OUTPUT 2 // night light output LED pin
 
+// thresholds/variables
+#define TEMP_THRESHOLD 69 // temperature to turn on AC unit
+#define LIGHT_THRESHOLD 600 // light level to turn on Night Light
 
-// initialize the library by associating any needed LCD interface pin
-// with the arduino pin number it is connected to
-const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+// global variables
 bool LCD_ON = false;
-LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
-bool nightOn, switchOn, intruderOn = false;
+LiquidCrystal lcd(LCD_PIN1,LCD_PIN2,LCD_PIN3,LCD_PIN4,LCD_PIN5,LCD_PIN6);
+bool nightOn, switchOn, intruderOn, acOn = false;
 int weatherTemp = 0;
-String topText = "Hello";
-String bottomText = "World";
+String topText;
+String bottomText;
 
+// setup function
 void setup() {
-	lcd.begin(16, 2); // set up the LCD's number of columns and rows:
-  pinMode (INTRUDER_LED, OUTPUT); //tells the computer the pin corresponding to the intruder alert LED is an output
-  pinMode (INTRUDER_SOUND, OUTPUT); //set the photosensing LED pin as an output
-  pinMode (NIGHT_OUTPUT, OUTPUT); //set the photosensing LED pin as an output
-  pinMode (WEATHER_OUTPUT, OUTPUT); //set the temperature controlled appliance pin as an output
-  pinMode (SWITCH_OUTPUT, OUTPUT); //set the smart switch appliance pin as an output
-  Serial.begin(9600);
+	lcd.begin(16, 2); // set up the LCD's columns and rows
+  pinMode (INTRUDER_LED, OUTPUT); // intruder LED pin is output
+  pinMode (INTRUDER_SOUND, OUTPUT); // speaker pin is output
+  pinMode (NIGHT_OUTPUT, OUTPUT); // night light LED pin is output
+  pinMode (WEATHER_OUTPUT, OUTPUT); // ac unit pin is output
+  pinMode (SWITCH_OUTPUT, OUTPUT); // smart switch pin is output
+  Serial.begin(9600); // open serial port
+
+	// startup LCD message
+  printLCD("ECE 2804 Project","By Bernie & Risa");
+  delay(5000);
+  lcd.clear();
 }
 
+// main loop
 void loop() {
   intruderOn = intruderAlertLight(INTRUDER_LED, INTRUDER_INPUT);  //flash intruder alert LED when intruder alert button is triggered
   nightOn = nightLight(NIGHT_INPUT, NIGHT_OUTPUT); // create instance of night light function
-	weatherTemp = weatherStation(WEATHER_OUTPUT,WEATHER_INPUT);  // create instance of weather station
+	acOn = weatherStation(WEATHER_OUTPUT,WEATHER_INPUT);  // create instance of weather station
 	switchOn = smartSwitch(SWITCH_OUTPUT,SWITCH_INPUT); // create instance of smart switch
+	weatherTemp = getTemp(WEATHER_INPUT); // get temperature from weather station
 	if(!intruderOn) {
+    bottomText = "Temp: " + String(weatherTemp) + "\xDF" + "F";
+    topText = "NL:" + String(nightOn) + " SS:" + String(switchOn) + " AC:" + String(acOn);
 		printStatus(topText,bottomText);
 	}
 }
@@ -70,12 +92,11 @@ void printAlert() {
 }
 
 void printStatus(String top, String bottom) {
-	const int waitTime = 1000;
-  static unsigned long previousTime = 0;  //previous time the LED state was changed
+	const int waitTime = 100;
+  static unsigned long previousTime = 0;  //previous time the LCD state was changed
 	unsigned long currentTime = millis();  //saves current program time
 	if (currentTime - previousTime > waitTime) {  //when the program waits a certain amount of time
 		previousTime = currentTime; 
-		lcd.clear();
 		printLCD(top,bottom);
 	}
 }
@@ -144,12 +165,19 @@ bool intruderAlertLight(const int ledPin, const int sensorPin) {
     flashLED(ledPin);  //flash the intruder alert LED  
 		printAlert();
 		playSpeakerTone(INTRUDER_SOUND, 1523.25, 200);
+    if (isButtonPressed(buttonLevel)) {
+      lcd.clear();
+      lcd.display();
+    }
   }
   else {  //when the intruder alert is NOT toggled
     digitalWrite(ledPin, LOW);  //turn the intruder alert LED off
-    lcd.clear();
     LCD_ON = false; // Is the LCD on in the Intruder Blinking function?
 		noTone(INTRUDER_SOUND);
+    if (isButtonPressed(buttonLevel)) {
+      lcd.clear();
+      lcd.display();
+    }
   }
 	return intruderAlertToggled;
 }
@@ -218,7 +246,7 @@ bool isButtonPressed(int buttonVoltage) {
 }
 
 bool nightLight(const int sensorPin, const int LED_pin) {
-  const int threshold = 600;  //based on the voltage divider characteristics of the circuit
+  const int threshold = LIGHT_THRESHOLD;  //based on the voltage divider characteristics of the circuit
   int lightLevel= analogRead(sensorPin);
   //Serial.print("Light Level: ");
   //Serial.println(lightLevel);
@@ -269,20 +297,29 @@ void playSpeakerTone(const int pinOut, float freq, int duration) {
  * Function Return:     Nothing. 
  * Function Behavior:   Reads the input temperature data and turns on the automatic air conditioner (LED) when temperature is too high.
  */
-int weatherStation(const int outputPin, const int inputPin) {
+bool weatherStation(const int outputPin, const int inputPin) {
+	int temperature = getTemp(inputPin);
+	const int threshold = TEMP_THRESHOLD;
+	if (temperature > threshold){  //when the temperature is too high
+		digitalWrite(outputPin, HIGH); //turn LED on
+	}
+	else{  //when the temperature is not too high
+		digitalWrite(outputPin, LOW); //turn LED off
+	}
+  return temperature > threshold;
+}
+
+int getTemp(const int inputPin) {
+  const int waitTime = 5000;
+  static unsigned long previousTime = 0;  //previous time the LCD state was changed
+  unsigned long currentTime = millis();  //saves current program time
   int tempLevel = analogRead(inputPin);
-  float temperature = (tempLevel * 0.46560509554);  //convert serial temperature input to fahrenheit 
-  const int threshold = 85;
-   
-  if (temperature > threshold){  //when the temperature is too high
-    digitalWrite(outputPin, HIGH); //turn LED on
+  int temperature = (tempLevel * 0.46560509554);  //convert serial temperature input to fahrenheit 
+	static unsigned int prevTemp = temperature;
+  if (currentTime - previousTime > waitTime) {  //when the program waits a certain amount of time
+    prevTemp = temperature;
+    previousTime = currentTime;
   }
-  else{  //when the temperature is not too high
-    digitalWrite(outputPin, LOW); //turn LED off
-  }
-  Serial.print("Temp Level: ");
-  Serial.print(tempLevel);
-  Serial.print("Temperature: ");
-  Serial.println(temperature);
-	return temperature;
+  Serial.println(prevTemp);
+	return prevTemp;
 }
