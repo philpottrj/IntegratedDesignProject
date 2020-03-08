@@ -1,5 +1,5 @@
 # Integrated Design Project
-By: Bernie Cieplak [@sideberns][https://github.com/sideberns] & Risa Philpott [(@philpottrj)][https://github.com/philpottrj]
+By: Bernie Cieplak ([@sideberns](https://github.com/sideberns)) & Risa Philpott ([@philpottrj](https://github.com/philpottrj))
 
 ---
 
