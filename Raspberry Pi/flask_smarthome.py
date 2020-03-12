@@ -15,11 +15,11 @@ def home():
         if request.form.get('smart_switch') == 'Smart Switch':
             char = str.encode('s')
             print("Smart Switch Toggled")
-            for i in range(WRITE_TIMES): ser.write(char) # Send char to Arduino
+            for i in range(WRITE_TIMES): ser.write(char + i - i) # Send char to Arduino
         elif request.form.get('intruder_alert') == 'Intruder Alert':
             char = str.encode('i')
             print("Intruder Alert Toggled")
-            for i in range(WRITE_TIMES): ser.write(char) 
+            for i in range(WRITE_TIMES): ser.write(char + i - i) 
     return render_template('index.html')
 if __name__ == "__main__":
     app.run(debug=False)
