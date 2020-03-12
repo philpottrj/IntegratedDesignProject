@@ -16,9 +16,11 @@ ser.flushInput()
 @app.route("/", methods=['GET','POST'])
 def home():
     if request.method == 'POST':
-        # ser_bytes = ser.readline()
-        # byteline = (ser_bytes[0:len(ser_bytes)-2].decode("utf-8"))
-        # print(byteline)
+        ser_bytes = ser.readline()
+        byteline = (ser_bytes[0:len(ser_bytes)-2].decode("utf-8"))
+        ser.flushInput()
+        ser.flushOutput()
+        print(byteline)
         if request.form.get('smart_switch') == 'Smart Switch':
             char = str.encode('s')
             start = time.time()
