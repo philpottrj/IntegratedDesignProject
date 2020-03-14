@@ -3,7 +3,7 @@ import serial
 from msvcrt import getch
 import os
 
-ser = serial.Serial('COM6', baudrate=9600, timeout=1) # Establish connnection to Arduino
+ser = serial.Serial('COM6', baudrate=9600, timeout=1) # Establish connection to Arduino
 WRITE_TIMES = 5
 DEBUG = False
 

@@ -17,7 +17,10 @@ try:
     ser.flushInput()
 except:
     SERIAL_OPEN = False
-    print("ERROR: Serial Port Not Open/Connected.")
+    print("\n\t######################################")
+    print("\tERROR: Serial Port Not Open/Connected.")
+    print("\t       Running without Arduino...")
+    print("\t######################################\n")
 
 # Main Website
 @app.route("/", methods=['GET','POST'])
@@ -43,11 +46,7 @@ def home():
             ser_bytes = ser.readline()
             byteline = (ser_bytes[0:len(ser_bytes)-2].decode("utf-8")).split(',')
             print(str(byteline))
-        nl = int(byteline[0])
-        ac = int(byteline[1])
-        ss = int(byteline[2])
-        temp = int(byteline[3])
-        intruder = int(byteline[4])
+        nl,ac,ss,temp,intruder = list(map(int, byteline))
     return render_template('index.html', nl=nl, ac=ac, ss=ss, temp=temp, intruder=intruder)
 
 

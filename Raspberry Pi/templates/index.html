@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <head>
-    <script type="text/javascript">
-        var nl = Boolean({{ nl }});
-        var ac = Boolean({{ ac }});
-        var ss = Boolean({{ ss }});
-        var temp = {{ temp }};
-        var intruder = Boolean({{ intruder }});
-    </script>
-    <script type="text/javascript" src="../static/script.js"></script>
 </head>
 <html>
     <body>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript">
+            var nl = Boolean({{ nl }});
+            var ac = Boolean({{ ac }});
+            var ss = Boolean({{ ss }});
+            var temp = {{ temp }};
+            var intruder = Boolean({{ intruder }});
+        </script>
+        <script type="text/javascript" src="../static/script.js"></script>
         <h1>Smart Home Control</h1>
         <form method="POST" action="/">
             <input type="submit" name="smart_switch" value="Smart Switch">
