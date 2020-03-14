@@ -1,9 +1,26 @@
 <!DOCTYPE html>
+<head>
+    <script type="text/javascript">
+        var nl = Boolean({{ nl }});
+        var ac = Boolean({{ ac }});
+        var ss = Boolean({{ ss }});
+        var temp = {{ temp }};
+        var intruder = Boolean({{ intruder }});
+    </script>
+    <script type="text/javascript" src="../static/script.js"></script>
+</head>
 <html>
     <body>
+        <h1>Smart Home Control</h1>
         <form method="POST" action="/">
-        <input type="submit" name="smart_switch" value="Smart Switch">
-        <input type="submit" name="intruder_alert" value="Intruder Alert">
+            <input type="submit" name="smart_switch" value="Smart Switch">
+            <input type="submit" name="intruder_alert" value="Intruder Alert">
         </form>
+        <h1>Smart Home Status</h1>
+        <p id="nightLight">Night Light: </p>
+        <p id="airConditioning">Air Conditioning: </p>
+        <p id="smartSwitch">Smart Switch: </p>
+        <p id="temperature">Temperature: </p>
+        <p id="intruderAlert">Intruder: </p> 
     </body>
 </html>
