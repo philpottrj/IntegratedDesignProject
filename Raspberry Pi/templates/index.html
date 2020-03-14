@@ -1,17 +1,12 @@
 <!DOCTYPE html>
 <head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <html>
     <body>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script type="text/javascript">
-            var nl = Boolean({{ nl }});
-            var ac = Boolean({{ ac }});
-            var ss = Boolean({{ ss }});
-            var temp = {{ temp }};
-            var intruder = Boolean({{ intruder }});
-        </script>
-        <script type="text/javascript" src="../static/script.js"></script>
         <h1>Smart Home Control</h1>
         <form method="POST" action="/">
             <input type="submit" name="smart_switch" value="Smart Switch">
@@ -23,5 +18,6 @@
         <p id="smartSwitch">Smart Switch: </p>
         <p id="temperature">Temperature: </p>
         <p id="intruderAlert">Intruder: </p> 
+        <script>document.write('<script src="../static/script.js?dev=' + Math.floor(Math.random() * 100) + '"\><\/script>');</script>
     </body>
 </html>

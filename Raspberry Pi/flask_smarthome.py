@@ -8,8 +8,6 @@ import serial
 # Global Variables
 WRITE_TIMES = 5
 SERIAL_OPEN = True
-nl = ac = ss = intruder = 0
-temp = 70
 
 app = Flask(__name__) # Create Flask object
 try:
@@ -25,7 +23,6 @@ except:
 # Main Website
 @app.route("/", methods=['GET','POST'])
 def home():
-    global nl, ac, ss, temp, intruder
     if SERIAL_OPEN:
         ser.flushInput()
         ser.flushOutput()
@@ -36,18 +33,7 @@ def home():
             elif request.form.get('intruder_alert') == 'Intruder Alert':
                 char = str.encode('i')
                 for _ in range(WRITE_TIMES): ser.write(char) # Send char to Arduino
-        sleep(0.03)
-        ser_bytes = ser.readline()
-        byteline = (ser_bytes[0:len(ser_bytes)-2].decode("utf-8")).split(',')
-        print(byteline)
-        while len(byteline) != 5:
-            print("ERROR ^")
-            sleep(0.01)
-            ser_bytes = ser.readline()
-            byteline = (ser_bytes[0:len(ser_bytes)-2].decode("utf-8")).split(',')
-            print(str(byteline))
-        nl,ac,ss,temp,intruder = list(map(int, byteline))
-    return render_template('index.html', nl=nl, ac=ac, ss=ss, temp=temp, intruder=intruder)
+    return render_template('index.html')
 
 
 # Start Flask Server
