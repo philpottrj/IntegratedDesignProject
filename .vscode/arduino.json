@@ -1,5 +1,0 @@
-{
-    "board": "arduino:avr:uno",
-    "sketch": "Arduino\\smart_home\\smart_home.ino",
-    "port": "COM6"
-}
