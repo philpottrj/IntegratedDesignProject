@@ -68,7 +68,7 @@ void loop() {
     + String(weatherTemp) + ',' + String(intruderOn);
   printSerial(serialText);
   weatherTemp = getTemp(WEATHER_INPUT); // get temperature from weather station
-  intruderOn = intruderAlertLight(INTRUDER_LED, INTRUDER_INPUT);  //flash intruder alert LED when intruder alert button is triggered
+  intruderOn = intruderAlertLight(INTRUDER_LED, INTRUDER_INPUT);  // flash intruder alert LED when intruder alert button is triggered
   if(!intruderOn) {
     bottomText = "Temp: " + String(weatherTemp) + "\xDF" + "F";
     topText = "NL:" + String(nightOn) + " SS:" + String(switchOn) + " AC:" + String(acOn);
@@ -78,8 +78,8 @@ void loop() {
 
 void printAlert() { 
   const int waitTime = 500;
-  static unsigned long previousTime = 0;  //previous time the LED state was changed
-  unsigned long currentTime = millis();  //saves current program time
+  static unsigned long previousTime = 0;  // previous time the LCD state was changed
+  unsigned long currentTime = millis();  // saves current program time
   printLCD("INTRUDER","ALERT");
   if (currentTime - previousTime > waitTime) {  //when the program waits a certain amount of time
     previousTime = currentTime; 
@@ -146,31 +146,31 @@ bool smartSwitch(const int ledPin, const int sensorPin) {
   static bool buttonToggled = false;
   static bool ledActivated = false;
   static int buttonLevel = LOW;
-  buttonLevel = analogRead(SWITCH_INPUT);  //reads the voltage level of the button from the analog one sensor pin
-  ledActivated = isButtonPressed(buttonLevel);  //when the button is pressed, LED is activated, and vice versa
-  buttonToggled = updateButtonToggle(ledActivated, buttonToggled);  //the LED is toggled when intruder mode is activated, and vice versa
+  buttonLevel = analogRead(SWITCH_INPUT);  // reads the voltage level of the button from the analog one sensor pin
+  ledActivated = isButtonPressed(buttonLevel);  // when the button is pressed, LED is activated, and vice versa
+  buttonToggled = updateButtonToggle(ledActivated, buttonToggled);  // the LED is toggled when intruder mode is activated, and vice versa
 
-  // Raspbery Pi Trigger
+  // Raspberry Pi Trigger
   bool serialData = Serial.available();
   if(serialData){ // only trigger if data has been sent
     char inByte = Serial.read(); // read the incoming data
     if(inByte == 's') {
-      ledActivated = true;  //when the button is pressed, LED is activated, and vice versa
-      buttonToggled = updateButtonToggle(ledActivated, buttonToggled);  //the LED is toggled when intruder mode is activated, and vice versa
+      ledActivated = true;  // when the button is pressed, LED is activated, and vice versa
+      buttonToggled = updateButtonToggle(ledActivated, buttonToggled);  // the LED is toggled when intruder mode is activated, and vice versa
     }
   }
 
-  if (buttonToggled) {  //when the intruder alert IS toggled
+  if (buttonToggled) {  // when the intruder alert IS toggled
     digitalWrite(ledPin, HIGH); // turn on the smart switch
   }
-  else {  //when the intruder alert is NOT toggled
+  else {  // when the intruder alert is NOT toggled
     digitalWrite(ledPin, LOW); // turn off the smart switch
   }
   return buttonToggled;
 }
 
 /*
- * Function Name:       intuderAlertLight
+ * Function Name:       intruderAlertLight
  * Function Parameters: The pin number of the LED used to simulate the intruder alert, as a constant integer. 
  *                      The pin number of the analog sensor pin that measures the intruder alert activation button voltage, as a constant integer. 
  * Function Return:     Nothing. 
@@ -180,9 +180,9 @@ bool intruderAlertLight(const int ledPin, const int sensorPin) {
   static bool intruderAlertToggled = false;
   static bool intruderModeActivated = false;
   static int buttonLevel = LOW;
-  buttonLevel = analogRead(INTRUDER_INPUT);  //reads the voltage level of the button from the analog one sensor pin
-  intruderModeActivated = isButtonPressed(buttonLevel);  //when the button is pressed, intruder mode is activated, and vice versa
-  intruderAlertToggled = updateButtonToggle(intruderModeActivated, intruderAlertToggled);  //the intruder alert is toggled when intruder mode is activated, and vice versa
+  buttonLevel = analogRead(INTRUDER_INPUT);  // reads the voltage level of the button from the analog one sensor pin
+  intruderModeActivated = isButtonPressed(buttonLevel);  // when the button is pressed, intruder mode is activated, and vice versa
+  intruderAlertToggled = updateButtonToggle(intruderModeActivated, intruderAlertToggled);  // the intruder alert is toggled when intruder mode is activated, and vice versa
   char inByte = ' ';
 
   // Raspberry Pi Trigger
@@ -193,12 +193,12 @@ bool intruderAlertLight(const int ledPin, const int sensorPin) {
     isIntruder = inByte == 'i';
     if(isIntruder) {
       intruderModeActivated = true;
-      intruderAlertToggled = updateButtonToggle(intruderModeActivated, intruderAlertToggled);  //the intruder alert is toggled when intruder mode is activated, and vice versa
+      intruderAlertToggled = updateButtonToggle(intruderModeActivated, intruderAlertToggled);  // the intruder alert is toggled when intruder mode is activated, and vice versa
     }
   }
 
-  if (intruderAlertToggled) {  //when the intruder alert IS toggled
-    flashLED(ledPin);  //flash the intruder alert LED  
+  if (intruderAlertToggled) {  // when the intruder alert IS toggled
+    flashLED(ledPin);  // flash the intruder alert LED  
     printAlert();
     playSpeakerTone(INTRUDER_SOUND, 1523.25, 200);
     if (isButtonPressed(buttonLevel) || isIntruder) {
@@ -206,8 +206,8 @@ bool intruderAlertLight(const int ledPin, const int sensorPin) {
       lcd.display();
     }
   }
-  else {  //when the intruder alert is NOT toggled
-    digitalWrite(ledPin, LOW);  //turn the intruder alert LED off
+  else {  // when the intruder alert is NOT toggled
+    digitalWrite(ledPin, LOW);  // turn the intruder alert LED off
     LCD_ON = false; // Is the LCD on in the Intruder Blinking function?
     noTone(INTRUDER_SOUND);
     if (isButtonPressed(buttonLevel) || isIntruder) {
@@ -227,16 +227,16 @@ bool intruderAlertLight(const int ledPin, const int sensorPin) {
 bool updateButtonToggle(bool pressed, bool toggled) {
   static unsigned long lastTimeToggled;
   const int debouncingTime = 200;
-  bool toggle = toggled;  //creates seperate toggle variable as to not overwrite the input variable
+  bool toggle = toggled;  // creates separate toggle variable as to not overwrite the input variable
   unsigned long difference = millis() - lastTimeToggled;
-  if (pressed) {  //if button is pressed
-    if (toggled && (difference > debouncingTime)){  //if button is toggled and a certain delay time has passed
-      toggle = false;  //untoggle the button
-      lastTimeToggled = millis();  //update last time toggled to current time
+  if (pressed) {  // if button is pressed
+    if (toggled && (difference > debouncingTime)){  // if button is toggled and a certain delay time has passed
+      toggle = false;  // untoggle the button
+      lastTimeToggled = millis();  // update last time toggled to current time
     }
     else if (!toggled && (difference > debouncingTime)) {
-      toggle = true;  //toggle the button
-      lastTimeToggled = millis();  //update last time toggled to current time
+      toggle = true;  // toggle the button
+      lastTimeToggled = millis();  // update last time toggled to current time
     }
   }
   return toggle;
@@ -249,10 +249,10 @@ bool updateButtonToggle(bool pressed, bool toggled) {
  */
 void flashLED(const int LED_pin) {
   const int waitTime = 50;
-  unsigned long currentTime = millis();  //saves current program time
-  static unsigned long previousTime = 0;  //previous time the LED state was changed
+  unsigned long currentTime = millis();  // saves current program time
+  static unsigned long previousTime = 0;  // previous time the LED state was changed
   static int LED_state = LOW;
-  if (currentTime - previousTime > waitTime) {  //when the program waits a certain amount of time
+  if (currentTime - previousTime > waitTime) {  // when the program waits a certain amount of time
     previousTime = currentTime; 
     if (LED_state == LOW) {
       LED_state = HIGH;
@@ -260,7 +260,7 @@ void flashLED(const int LED_pin) {
     else {
       LED_state = LOW;
     }
-    digitalWrite(LED_pin, LED_state);  //change the state of the LED, aka turn it on or off
+    digitalWrite(LED_pin, LED_state);  // change the state of the LED, aka turn it on or off
   }
 }
 /*
@@ -272,23 +272,23 @@ void flashLED(const int LED_pin) {
 bool isButtonPressed(int buttonVoltage) {
   const int threshold = 1000;
   static bool pressed = false;
-  if (buttonVoltage < threshold) {  //if voltage read is 0V
+  if (buttonVoltage < threshold) {  // if voltage read is 0V
     pressed = false;
   }
-  else if (buttonVoltage > threshold) {  //if voltage read is 5V
+  else if (buttonVoltage > threshold) {  // if voltage read is 5V
     pressed = true;
   }
   return pressed;
 }
 
 bool nightLight(const int sensorPin, const int LED_pin) {
-  const int threshold = LIGHT_THRESHOLD;  //based on the voltage divider characteristics of the circuit
+  const int threshold = LIGHT_THRESHOLD;  // based on the voltage divider characteristics of the circuit
   int lightLevel= analogRead(sensorPin);
   if (lightLevel < threshold){
-    digitalWrite(LED_pin, HIGH); //if the light level is below the threshold level, the LED turns on
+    digitalWrite(LED_pin, HIGH); // if the light level is below the threshold level, the LED turns on
   }
   else{
-    digitalWrite(LED_pin, LOW); //otherwise, if the light level is above the threshold level, the LED is off
+    digitalWrite(LED_pin, LOW); // otherwise, if the light level is above the threshold level, the LED is off
   }
   return (lightLevel < threshold);
 }
@@ -304,16 +304,16 @@ bool nightLight(const int sensorPin, const int LED_pin) {
  */
 void playSpeakerTone(const int pinOut, float freq, int duration) {
   const int waitTime = duration;
-  static unsigned long previousTime = 0;  //previous time the LED state was changed
-  unsigned long currentTime = millis();  //saves current program time
+  static unsigned long previousTime = 0;  // previous time the LED state was changed
+  unsigned long currentTime = millis();  // saves current program time
   static bool toneOn = false;
-  if (currentTime - previousTime > waitTime) {  //when the program waits a certain amount of time
+  if (currentTime - previousTime > waitTime) {  // when the program waits a certain amount of time
     previousTime = currentTime; 
-    if (!toneOn) {  //when tone is OFF aka not playing
-      toneOn = true;  //turn tone ON
+    if (!toneOn) {  // when tone is OFF aka not playing
+      toneOn = true;  // turn tone ON
     }
     else {
-      toneOn = false;  //turn tone OFF
+      toneOn = false;  // turn tone OFF
     }
   }
   if (toneOn) {
@@ -334,23 +334,23 @@ void playSpeakerTone(const int pinOut, float freq, int duration) {
 bool weatherStation(const int outputPin, const int inputPin) {
   int temperature = getTemp(inputPin);
   const int threshold = TEMP_THRESHOLD;
-  if (temperature > threshold){  //when the temperature is too high
-    digitalWrite(outputPin, HIGH); //turn LED on
+  if (temperature > threshold){  // when the temperature is too high
+    digitalWrite(outputPin, HIGH); // turn LED on
   }
-  else{  //when the temperature is not too high
-    digitalWrite(outputPin, LOW); //turn LED off
+  else{  // when the temperature is not too high
+    digitalWrite(outputPin, LOW); // turn LED off
   }
   return temperature > threshold;
 }
 
 int getTemp(const int inputPin) {
   const int waitTime = 5000;
-  static unsigned long previousTime = 0;  //previous time the LCD state was changed
-  unsigned long currentTime = millis();  //saves current program time
+  static unsigned long previousTime = 0;  // previous time the LCD state was changed
+  unsigned long currentTime = millis();  // saves current program time
   int tempLevel = analogRead(inputPin);
-  int temperature = (tempLevel * 0.46560509554);  //convert analog temperature input to fahrenheit 
+  int temperature = (tempLevel * 0.46560509554);  // convert analog temperature input to fahrenheit 
   static unsigned int prevTemp = temperature;
-  if (currentTime - previousTime > waitTime) {  //when the program waits a certain amount of time
+  if (currentTime - previousTime > waitTime) {  // when the program waits a certain amount of time
     prevTemp = temperature;
     previousTime = currentTime;
   }
