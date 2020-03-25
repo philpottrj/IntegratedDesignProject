@@ -8,6 +8,12 @@ The purpose of this code is to create a smart home device run by Arduino.  This 
 
 ## Changelog
 
+### v0.25 - Website Integration (Prerelease)
+- Implemented WiFi connectivity
+- Built Python Flask application to handle Button presses remotely
+- AJAX requests are used to handle reading and displaying Arduino status
+- Note: Website CSS will be implemented at a later date
+
 ### v0.2 - Milestone 2
 - Created the arduino circuit and code
 - Allows for local functionality of the following appliances
@@ -19,7 +25,9 @@ The purpose of this code is to create a smart home device run by Arduino.  This 
 	- Night light
 - Note: all interaction with Bluetooth is simulated using button presses
 
+## Implemented Features
+- [x] Wireless connectivity
+
 ## Planned Features
 - [ ] Bluetooth functionality
-- [ ] Wireless connectivity
 - [ ] Encryption capability
