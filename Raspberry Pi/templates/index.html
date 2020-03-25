@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <head>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-    <meta http-equiv="Pragma" content="no-cache"/>
-    <meta http-equiv="Expires" content="0"/>
+    <!-- Calls jQuery JavaScript library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <html>
     <body>
+        <!-- Buttons -->
         <h1>Smart Home Control</h1>
         <form method="POST" action="/">
             <input type="submit" name="smart_switch" value="Smart Switch">
             <input type="submit" name="intruder_alert" value="Intruder Alert">
         </form>
+        <!-- Arduino Status -->
         <h1>Smart Home Status</h1>
-        <p id="nightLight">Night Light: </p>
-        <p id="airConditioning">Air Conditioning: </p>
-        <p id="smartSwitch">Smart Switch: </p>
-        <p id="temperature">Temperature: </p>
-        <p id="intruderAlert">Intruder: </p> 
+        <p>Night Light: <span id="nightLight"></span></p>
+        <p>Air Conditioning: <span id="airConditioning"></span></p>
+        <p>Smart Switch: <span id="smartSwitch"></span></p>
+        <p>Temperature: <span id="temperature"></span></p>
+        <p>Intruder: <span id="intruderAlert"></span></p> 
+        <!-- Calls JavaScript, and tacks on a random 4-digit number to prevent caching -->
         <script>document.write('<script src="../static/script.js?dev=' + Math.floor(Math.random() * 10000) + '"\><\/script>');</script>
     </body>
 </html>
