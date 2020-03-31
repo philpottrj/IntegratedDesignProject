@@ -1,24 +1,37 @@
 <!DOCTYPE html>
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Calls jQuery JavaScript library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- Calls Bootstrap library-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="shortcut icon" type="image/png" href="../static/wifi.png"/>
+    <script>document.write('<link rel="stylesheet" type="text/css" href="../static/style.css?dev=' + Math.floor(Math.random() * 10000) + '"\>');</script>
+    <title>Smart Home Project</title>
 </head>
 <html>
     <body>
         <!-- Buttons -->
-        <h1>Smart Home Control</h1>
-        <form method="POST" action="/">
-            <input type="submit" name="smart_switch" value="Smart Switch">
-            <input type="submit" name="intruder_alert" value="Intruder Alert">
-        </form>
-        <!-- Arduino Status -->
-        <h1>Smart Home Status</h1>
-        <p>Night Light: <span id="nightLight"></span></p>
-        <p>Air Conditioning: <span id="airConditioning"></span></p>
-        <p>Smart Switch: <span id="smartSwitch"></span></p>
-        <p>Temperature: <span id="temperature"></span></p>
-        <p>Intruder: <span id="intruderAlert"></span></p> 
-        <!-- Calls JavaScript, and tacks on a random 4-digit number to prevent caching -->
-        <script>document.write('<script src="../static/script.js?dev=' + Math.floor(Math.random() * 10000) + '"\><\/script>');</script>
+        <div class="container-fluid" id="main">
+            <h1 class="text-center">Smart Home Control</h1>
+            <form method="POST" action="">
+                <div class="text-center">
+                    <input type="submit" name="smart_switch" value="Smart Switch">
+                    <input type="submit" name="intruder_alert" value="Intruder Alert">
+                </div>
+            </form>
+            <!-- Arduino Status -->
+            <h1 class="text-center">Smart Home Status</h1>
+            <div id="status-center">
+                <p><strong>Night Light: </strong> <span id="nightLight"></span></p>
+                <p><strong>Air Conditioning:</strong> <span id="airConditioning"></span></p>
+                <p><strong>Smart Switch:</strong> <span id="smartSwitch"></span></p>
+                <p><strong>Temperature:</strong> <span id="temperature"></span></p>
+                <p><strong>Intruder:</strong> <span id="intruderAlert"></span></p> 
+            </div>
+            <!-- Calls JavaScript, and tacks on a random 4-digit number to prevent caching -->
+            <script>document.write('<script src="../static/script.js?dev=' + Math.floor(Math.random() * 10000) + '"\><\/script>');</script>
+        </div>
     </body>
 </html>

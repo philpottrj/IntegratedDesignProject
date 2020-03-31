@@ -7,11 +7,11 @@ function updateValues() {
         complete: function(data) { // When AJAX request successfully completes
             var array = String(data.responseText).split(', '); // Returns /data page and converts to array
             // Assign array to variables
-            var nl = Boolean(Number(array[0]));
-            var ac = Boolean(Number(array[1]));
-            var ss = Boolean(Number(array[2]));
+            var nl = boolToState(Boolean(Number(array[0])));
+            var ac = boolToState(Boolean(Number(array[1])));
+            var ss = boolToState(Boolean(Number(array[2])));
             var temp = Number(array[3]);
-            var intruder = Boolean(Number(array[4]));
+            var intruder = boolToState(Boolean(Number(array[4])));
             // Insert variables into HTML
             document.getElementById('nightLight').innerHTML = nl;
             document.getElementById('airConditioning').innerHTML = ac;
@@ -22,7 +22,15 @@ function updateValues() {
     });
 }
 
+function boolToState(bool) { 
+    let state = "Off";
+    if(bool) {
+        state = "On";
+    }
+    return state;
+}
+
 // Execute updateValues() on load of webpage
 $(document).ready(updateValues())
 // Execute updateValues() every 300 milliseconds after webpage is loaded
-setInterval(updateValues, 300);
+setInterval(updateValues, 2000);
