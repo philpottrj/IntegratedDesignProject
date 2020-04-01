@@ -22,6 +22,15 @@ function updateValues() {
     });
 }
 
+$("input").click(function(e) {
+    e.preventDefault();
+    $.ajax({
+        type: "POST",
+        url: "/",
+        data: $(this)
+    });
+});
+
 function boolToState(bool) { 
     let state = "Off";
     if(bool) {
@@ -33,4 +42,4 @@ function boolToState(bool) {
 // Execute updateValues() on load of webpage
 $(document).ready(updateValues())
 // Execute updateValues() every 300 milliseconds after webpage is loaded
-setInterval(updateValues, 2000);
+setInterval(updateValues, 500);
