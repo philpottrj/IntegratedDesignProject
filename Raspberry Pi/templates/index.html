@@ -24,11 +24,13 @@
             <!-- Arduino Status -->
             <h1 class="text-center">Smart Home Status</h1>
             <div id="status-center">
-                <p><strong>Night Light: </strong> <span id="nightLight"></span></p>
-                <p><strong>Air Conditioning:</strong> <span id="airConditioning"></span></p>
-                <p><strong>Smart Switch:</strong> <span id="smartSwitch"></span></p>
-                <p><strong>Temperature:</strong> <span id="temperature"></span></p>
-                <p><strong>Intruder:</strong> <span id="intruderAlert"></span></p> 
+                <div style="margin: 30px">
+                    <p><strong>Night Light: </strong> <span id="nightLight"></span></p>
+                    <p><strong>Air Conditioning:</strong> <span id="airConditioning"></span></p>
+                    <p><strong>Smart Switch:</strong> <span id="smartSwitch"></span></p>
+                    <p><strong>Temperature:</strong> <span id="temperature"></span></p>
+                    <p><strong>Intruder:</strong> <span id="intruderAlert"></span></p> 
+                </div>
             </div>
             <!-- Calls JavaScript, and tacks on a random 4-digit number to prevent caching -->
             <script>document.write('<script src="../static/script.js?dev=' + Math.floor(Math.random() * 10000) + '"\><\/script>');</script>

@@ -42,4 +42,4 @@ function boolToState(bool) {
 // Execute updateValues() on load of webpage
 $(document).ready(updateValues())
 // Execute updateValues() every 300 milliseconds after webpage is loaded
-setInterval(updateValues, 500);
+setInterval(updateValues, 2000);

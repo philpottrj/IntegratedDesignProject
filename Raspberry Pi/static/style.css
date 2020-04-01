@@ -11,6 +11,6 @@ input {
   margin-right: 10px;
 }
 #status-center {
-  margin-top: 20px;
-  margin-left: 315px;
+  margin:auto;
+  max-width: 300px;
 }
