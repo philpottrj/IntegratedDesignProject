@@ -24,9 +24,6 @@ def home():
         ser.flushOutput() # Clean output (prevents overloading of serial port)
         ser.flushInput() # Clean input
         if request.method == 'POST': # If button pressed
-            print(request.form.get('smart_switch'))
-            print(request.values)
-            print(request.form)
             if request.form.get('smart_switch') == 'Smart Switch':
                 char = str.encode('s')
                 for _ in range(WRITE_TIMES): ser.write(char) # Send char to Arduino
