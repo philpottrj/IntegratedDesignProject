@@ -40,11 +40,14 @@ def get_serial(): # Prints Arduino status to /data webpage
     if SERIAL_OPEN:
         ser.flushOutput() # Flush output
         ser.flushInput() # Flush input
+        char = str.encode('d')
+        for _ in range(WRITE_TIMES): ser.write(char) # Send char to Arduino
         ser_bytes = ser.readline() # Read status of Arduino
         byteline = (ser_bytes[0:len(ser_bytes)-2].decode("utf-8")).split(',') # Convert to list
         if DEBUG: print(byteline)
         while len(byteline) != 5 or len(byteline[0]) == 0: # While error detected in list
             if DEBUG: print("--------- ERROR ----------")
+            for _ in range(WRITE_TIMES): ser.write(char) # Send char to Arduino
             ser_bytes = ser.readline()
             byteline = (ser_bytes[0:len(ser_bytes)-2].decode("utf-8")).split(',')
             if DEBUG: print(byteline)

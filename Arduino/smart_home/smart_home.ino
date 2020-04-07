@@ -1,14 +1,17 @@
 /*
 
-  Title: Smart Home - Milestone 2
+  Title: Smart Home - Milestone 3
   Authors: Risa Philpott & Bernie Cieplak
   Created: February 27, 2020
-  Last Modified: March 7, 2020 by Bernie Cieplak
+  Last Modified: April 7, 2020 by Bernie Cieplak
   
 */
 
 // LCD library
 #include <LiquidCrystal.h>
+
+// AltSoftSerial library
+#include <AltSoftSerial.h>
 
 // definitions
 // analog pin definitions
@@ -22,14 +25,15 @@
 #define LCD_PIN6 12 // LCD pin 6
 #define LCD_PIN5 11 // LCD pin 5
 #define LCD_PIN4 10 // LCD pin 4
-#define LCD_PIN3 9 // LCD pin 3
-#define SWITCH_OUTPUT 8 // smart switch output
-#define WEATHER_OUTPUT 7 // weather station appliance output
-// PIN 6 NOT USED
-#define LCD_PIN2 5 // LCD pin 2
-#define LCD_PIN1 4 // LCD pin 1
-#define INTRUDER_SOUND 3 // intruder speaker output
-#define NIGHT_OUTPUT 2 // night light output LED pin
+// PIN 9 - AltSoftSerial TX
+// PIN 8 - AltSoftSerial RX
+#define LCD_PIN3 7 // LCD pin 3
+#define SWITCH_OUTPUT 6 // smart switch output
+#define WEATHER_OUTPUT 5 // weather station appliance output
+#define LCD_PIN2 4 // LCD pin 2
+#define LCD_PIN1 3 // LCD pin 1
+#define INTRUDER_SOUND 2 // intruder speaker output
+#define NIGHT_OUTPUT 1 // night light output LED pin
 
 // global variables
 bool LCD_ON = false;
@@ -41,6 +45,7 @@ int weatherTemp = 0;
 String topText; // text that is put on the top row the LCD
 String bottomText; // text that is put on the bottom row of the LCD
 String serialText; // string that is output to the COM port
+AltSoftSerial altSerial; // initialize altSerial ports
 
 // setup function
 void setup() {
@@ -51,6 +56,7 @@ void setup() {
   pinMode (WEATHER_OUTPUT, OUTPUT); // ac unit pin is output
   pinMode (SWITCH_OUTPUT, OUTPUT); // smart switch pin is output
   Serial.begin(9600); // open serial port
+  altSerial.begin(9600); // open altSerial port
 
   // startup LCD message
   printLCD("ECE 2804 Project","By Bernie & Risa");
@@ -105,12 +111,10 @@ void printStatus(String top, String bottom) {
 }
 
 void printSerial(String serial) {
-  const int waitTime = 100;
-  static unsigned long previousTime = 0;  // previous time the LCD state was changed
-  unsigned long currentTime = millis();  // saves current program time
-  if (currentTime - previousTime > waitTime) {  // when the program waits a certain amount of time
-    previousTime = currentTime; 
-    Serial.println(serial);
+  // Raspberry Pi Trigger
+  if(incomingChar('d')) {
+    Serial.println(serial); // print serial data to USB
+    altSerial.println(serial); // prints serial data to bluetooth
   }
 }
 
@@ -135,6 +139,23 @@ void printLCD(String top, String bottom) {
     }
 }
 
+bool incomingChar(char c) {
+  bool returnVal = false;
+  bool serialData = Serial.available();
+  bool serialDataAlt = altSerial.available();
+  char inByte;
+  if(serialData || serialDataAlt){ // only trigger if data has been sent
+    if(serialData) {
+      inByte = Serial.read(); // read the incoming USB data
+    }
+    else {
+      inByte = altSerial.read(); // read the incoming bluetooth data
+    }
+    returnVal = inByte == c;
+  }
+  return returnVal;
+}
+
 /*
  * Function Name:       smartSwitch
  * Function Parameters: The pin number of the LED used to simulate the smart switch, as a constant integer. 
@@ -151,13 +172,9 @@ bool smartSwitch(const int ledPin, const int sensorPin) {
   buttonToggled = updateButtonToggle(ledActivated, buttonToggled);  // the LED is toggled when intruder mode is activated, and vice versa
 
   // Raspberry Pi Trigger
-  bool serialData = Serial.available();
-  if(serialData){ // only trigger if data has been sent
-    char inByte = Serial.read(); // read the incoming data
-    if(inByte == 's') {
-      ledActivated = true;  // when the button is pressed, LED is activated, and vice versa
-      buttonToggled = updateButtonToggle(ledActivated, buttonToggled);  // the LED is toggled when intruder mode is activated, and vice versa
-    }
+  if(incomingChar('s')) {
+    ledActivated = true;  // when the button is pressed, LED is activated, and vice versa
+    buttonToggled = updateButtonToggle(ledActivated, buttonToggled);  // the LED is toggled when intruder mode is activated, and vice versa
   }
 
   if (buttonToggled) {  // when the intruder alert IS toggled
@@ -183,25 +200,18 @@ bool intruderAlertLight(const int ledPin, const int sensorPin) {
   buttonLevel = analogRead(INTRUDER_INPUT);  // reads the voltage level of the button from the analog one sensor pin
   intruderModeActivated = isButtonPressed(buttonLevel);  // when the button is pressed, intruder mode is activated, and vice versa
   intruderAlertToggled = updateButtonToggle(intruderModeActivated, intruderAlertToggled);  // the intruder alert is toggled when intruder mode is activated, and vice versa
-  char inByte = ' ';
 
   // Raspberry Pi Trigger
-  bool isIntruder = false;
-  bool serialData = Serial.available();
-  if(serialData){ // only trigger if data has been sent
-    char inByte = Serial.read(); // read the incoming data
-    isIntruder = inByte == 'i';
-    if(isIntruder) {
-      intruderModeActivated = true;
-      intruderAlertToggled = updateButtonToggle(intruderModeActivated, intruderAlertToggled);  // the intruder alert is toggled when intruder mode is activated, and vice versa
-    }
+  if(incomingChar('i')) {
+    intruderModeActivated = true;
+    intruderAlertToggled = updateButtonToggle(intruderModeActivated, intruderAlertToggled);  // the intruder alert is toggled when intruder mode is activated, and vice versa
   }
 
   if (intruderAlertToggled) {  // when the intruder alert IS toggled
     flashLED(ledPin);  // flash the intruder alert LED  
     printAlert();
     playSpeakerTone(INTRUDER_SOUND, 1523.25, 200);
-    if (isButtonPressed(buttonLevel) || isIntruder) {
+    if (isButtonPressed(buttonLevel) || incomingChar('i')) {
       lcd.clear();
       lcd.display();
     }
@@ -210,7 +220,7 @@ bool intruderAlertLight(const int ledPin, const int sensorPin) {
     digitalWrite(ledPin, LOW);  // turn the intruder alert LED off
     LCD_ON = false; // Is the LCD on in the Intruder Blinking function?
     noTone(INTRUDER_SOUND);
-    if (isButtonPressed(buttonLevel) || isIntruder) {
+    if (isButtonPressed(buttonLevel) || incomingChar('i')) {
       lcd.clear();
       lcd.display();
     }
