@@ -32,7 +32,7 @@ def home():
                 for _ in range(WRITE_TIMES): ser.write(char) # Send char to Arduino
             elif request.form.get('intruder_alert') == 'Intruder Alert':
                 char = str.encode('i')
-                for _ in range(WRITE_TIMES): ser.write(char) # Send char to Arduino
+                for _ in range(WRITE_TIMES + 5): ser.write(char) # Send char to Arduino
     return render_template('index.html') # Returns the website
 
 @app.route("/data/")
