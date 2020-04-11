@@ -112,7 +112,10 @@ void printStatus(String top, String bottom) {
 
 void printSerial(String serial) {
   // Raspberry Pi Trigger
-  if(incomingChar('d')) {
+  const int waitTime = 100;
+  static unsigned long previousTime = 0;  // previous time the status was printed
+  unsigned long currentTime = millis();  // saves current program time
+  if (currentTime - previousTime > waitTime) {  // when the program waits a certain amount of time
     Serial.println(serial); // print serial data to USB
     altSerial.println(serial); // prints serial data to bluetooth
   }
