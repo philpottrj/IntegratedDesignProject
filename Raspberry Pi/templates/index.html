@@ -6,7 +6,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- Calls Bootstrap library-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Gets favicon for website-->
     <link rel="shortcut icon" type="image/png" href="../static/wifi.png"/>
+    <!-- Calls FontAwesome Library-->
+    <script src="https://kit.fontawesome.com/f5138581bf.js" crossorigin="anonymous"></script>
+    <!-- Calls CSS, and tacks on a random 4-digit number to prevent caching -->
     <script>document.write('<link rel="stylesheet" type="text/css" href="../static/style.css?dev=' + Math.floor(Math.random() * 10000) + '"\>');</script>
     <title>Smart Home Project</title>
 </head>
@@ -24,12 +28,35 @@
             <!-- Arduino Status -->
             <h1 class="text-center">Smart Home Status</h1>
             <div id="status-center">
-                <div style="margin: 30px">
-                    <p><strong>Night Light: </strong> <span id="nightLight"></span></p>
-                    <p><strong>Air Conditioning:</strong> <span id="airConditioning"></span></p>
-                    <p><strong>Smart Switch:</strong> <span id="smartSwitch"></span></p>
-                    <p><strong>Temperature:</strong> <span id="temperature"></span></p>
-                    <p><strong>Intruder Alert:</strong> <span id="intruderAlert"></span></p> 
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text" id="nightLight-icon"><i class="fas fa-lightbulb fa-9x"></i></p>
+                        <p class="card-text"><strong>Night Light: </strong> <span id="nightLight"></span></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text"><i id="airConditioning-icon" class="fas fa-fan fa-9x"></i></p>
+                        <p class="card-text"><strong>Air Conditioning:</strong> <span id="airConditioning"></span></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text"><i id="smartSwitch-icon" class="fas fa-toggle-on fa-9x"></i></p>
+                        <p class="card-text"><strong>Smart Switch:</strong> <span id="smartSwitch"></span></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text"><i id="temperature-icon" class="fas fa-thermometer-half fa-9x"></i></p>
+                        <p class="card-text"><strong>Temperature:</strong> <span id="temperature"></span></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text"><i id="intruderAlert-icon" class="fas fa-exclamation fa-9x"></i></p>
+                        <p class="card-text"><strong>Intruder Alert:</strong> <span id="intruderAlert"></span></p> 
+                    </div>
                 </div>
             </div>
             <!-- Calls JavaScript, and tacks on a random 4-digit number to prevent caching -->
