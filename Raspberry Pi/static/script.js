@@ -1,3 +1,14 @@
+// Define Color Variables
+var colors = {
+    red: "#DC3545", // old red: "#C23127",
+    yellow: "#FFC107", // old yellow: "#FFCC02",
+    orange: "#FD7E14",
+    green: "#28A745", // old green: "#4BD964",
+    blue: "#007BFF",
+    disabled: "#6C757D", // old disabled: "#CCCCCC",
+    error: "#E83E8C" // old error: "#FF0080"
+}
+
 // Function that updates values in HTML
 function updateValues() {
     // Create an AJAX request
@@ -12,22 +23,12 @@ function updateValues() {
             var ss = boolToState(Boolean(Number(array[2])));
             var temp = Number(array[3]);
             var intruder = boolToState(Boolean(Number(array[4])));
-            // Insert variables into HTML
-            // TODO: Split code up by element instead of by action
-            document.getElementById('nightLight').innerHTML = nl;
-            document.getElementById('airConditioning').innerHTML = ac;
-            document.getElementById('smartSwitch').innerHTML = ss;
-            document.getElementById('temperature').innerHTML = temp + "F";
-            document.getElementById('intruderAlert').innerHTML = intruder;
-            // Change Element colors in HTML
-            document.getElementById('nightLight-icon').style.color = updateIcons('nl',nl);
-            document.getElementById('airConditioning-icon').style.color = updateIcons('ac',ac);
-            document.getElementById('smartSwitch-icon').style.color = updateIcons('ss',ss);
-            document.getElementById('temperature-icon').style.color = updateIcons('temp',temp);
-            document.getElementById('intruderAlert-icon').style.color = updateIcons('ia',intruder);
             // Update all icons
+            updateNL(nl);
             updateAC(ac);
             updateSS(ss);
+            updateTemp(temp);
+            updateIA(intruder);
         }
     });
 }
@@ -49,101 +50,95 @@ function boolToState(bool) {
     return state;
 }
 
+function stateToBool(state) { 
+    let bool = false;
+    if(state == "On") {
+        bool = true;
+    }
+    return bool;
+}
+
 function updateAC(state) {
-    if (state == "On") {
+    if (stateToBool(state)) {
         $('#airConditioning-icon').addClass('fa-spin');
+        color = colors.blue;
     }
     else {
         $('#airConditioning-icon').removeClass('fa-spin');
+        color = colors.disabled;
     }
+    document.getElementById('airConditioning').innerHTML = state;
+    document.getElementById('airConditioning-icon').style.color = color;
 }
 
 function updateSS(state) {
-    if (state == "On") {
+    if (stateToBool(state)) {
         $('#smartSwitch-icon').removeClass('fa-toggle-off').addClass('fa-toggle-on');
+        color = colors.green;
     }
     else {
         $('#smartSwitch-icon').removeClass('fa-toggle-on').addClass('fa-toggle-off');
+        color = colors.disabled;
     }
+    document.getElementById('smartSwitch-icon').style.color = color;
+    document.getElementById('smartSwitch').innerHTML = state;
+}
+
+function updateIA(state) {
+    if (stateToBool(state)) {
+        $('#intruderAlert-icon').addClass('blink');
+        color = colors.red;
+    }
+    else {
+        $('#intruderAlert-icon').removeClass('blink');
+        color = colors.disabled;
+    }
+    document.getElementById('intruderAlert').innerHTML = state;
+    document.getElementById('intruderAlert-icon').style.color = color;
+}
+
+function updateNL(state) {
+    if (stateToBool(state)) {
+        color = colors.yellow;
+    }
+    else {
+        color = colors.disabled;
+    }
+    document.getElementById('nightLight').innerHTML = state;
+    document.getElementById('nightLight-icon').style.color = color;
 }
 
 function updateTemp(state) {
     if (isNaN(state) || state == 0) {
         color = colors.disabled;
+        $('#temperature-icon').removeClass('fa-thermometer-quarter');
+        $('#temperature-icon').removeClass('fa-thermometer-half');
+        $('#temperature-icon').removeClass('fa-thermometer-three-quarters');
+        $('#temperature-icon').addClass('fa-thermometer-empty');
     }
     else if (state < 70) {
-        color = colors.green;
+        color = colors.blue;
+        $('#temperature-icon').removeClass('fa-thermometer-empty');
+        $('#temperature-icon').removeClass('fa-thermometer-half');
+        $('#temperature-icon').removeClass('fa-thermometer-three-quarters');
+        $('#temperature-icon').addClass('fa-thermometer-quarter');
     } 
     else if (state < 80) {
-        color = colors.yellow;
+        color = colors.orange;
+        $('#temperature-icon').removeClass('fa-thermometer-empty');
+        $('#temperature-icon').removeClass('fa-thermometer-quarter');
+        $('#temperature-icon').removeClass('fa-thermometer-three-quarters');
+        $('#temperature-icon').addClass('fa-thermometer-half');
     }
     else {
         color = colors.red;
+        $('#temperature-icon').removeClass('fa-thermometer-empty');
+        $('#temperature-icon').removeClass('fa-thermometer-quarter');
+        $('#temperature-icon').removeClass('fa-thermometer-half');
+        $('#temperature-icon').addClass('fa-thermometer-three-quarters');
     }
-    break;
-}
-
-function updateIcons(icon,state) {
-    let colors = {
-        red: "#DC3545", // old red: "#C23127",
-        yellow: "#FFC107", // old yellow: "#FFCC02",
-        green: "#28A745", // old green: "#4BD964",
-        disabled: "#6C757D", // old disabled: "#CCCCCC",
-        error: "#E83E8C" // old error: "#FF0080"
-    }
-    let color = "";
-    switch (icon) {
-        case 'nl':
-            if (state == "On") {
-                color = colors.yellow;
-            } 
-            else {
-                color = colors.disabled;
-            }
-            break;
-        case 'ac':
-            if (state == "On") {
-                color = colors.green;
-            } 
-            else {
-                color = colors.disabled;
-            }
-            break;
-        case 'ss':
-            if (state == "On") {
-                color = colors.green;
-            } 
-            else {
-                color = colors.disabled;
-            }
-            break;
-        case 'temp':
-            if (isNaN(state) || state == 0) {
-                color = colors.disabled;
-            }
-            else if (state < 70) {
-                color = colors.green;
-            } 
-            else if (state < 80) {
-                color = colors.yellow;
-            }
-            else {
-                color = colors.red;
-            }
-            break;
-        case 'ia':
-            if (state == "On") {
-                color = colors.red;
-            } 
-            else {
-                color = colors.disabled;
-            }
-            break;
-        default:
-            color = color.error;
-            break;
-    }
-    return color;
+    document.getElementById('temperature').innerHTML = state + "F";
+    document.getElementById('temperature-icon').style.color = color;
 }
 
 // Execute updateValues() on load of webpage

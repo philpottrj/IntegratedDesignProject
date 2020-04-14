@@ -1,9 +1,9 @@
 /*
 
-  Title: Smart Home - Milestone 3
+  Title: Smart Home
   Authors: Risa Philpott & Bernie Cieplak
   Created: February 27, 2020
-  Last Modified: April 7, 2020 by Bernie Cieplak
+  Last Modified: April 11, 2020 by Bernie Cieplak
   
 */
 
@@ -361,7 +361,7 @@ int getTemp(const int inputPin) {
   static unsigned long previousTime = 0;  // previous time the LCD state was changed
   unsigned long currentTime = millis();  // saves current program time
   int tempLevel = analogRead(inputPin);
-  int temperature = (tempLevel * 0.46560509554);  // convert analog temperature input to fahrenheit 
+  int temperature = (tempLevel * 0.38800424628);  // convert analog temperature input to fahrenheit 
   static unsigned int prevTemp = temperature;
   if (currentTime - previousTime > waitTime) {  // when the program waits a certain amount of time
     prevTemp = temperature;

@@ -29,3 +29,13 @@ input {
 .card-body {
   margin: 0.5rem;
 }
+
+.blink {
+  animation: blinker 0.50s step-start infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
