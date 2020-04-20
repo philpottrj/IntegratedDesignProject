@@ -16,18 +16,22 @@
 </head>
 <html>
     <body>
-        <!-- Buttons -->
         <div class="container-fluid" id="main">
-            <h1 class="text-center">Smart Home Control</h1>
-            <form method="POST" action="#">
-                <div class="text-center">
-                    <input type="submit" name="smart_switch" value="Smart Switch">
-                    <input type="submit" name="intruder_alert" value="Intruder Alert">
-                </div>
-            </form>
             <!-- Arduino Status -->
             <h1 class="text-center">Smart Home Status</h1>
             <div id="status-center">
+                <div class="card clickable" id="smartSwitch-button">
+                    <div class="card-body">
+                        <p class="card-text"><i id="smartSwitch-icon" class="fas fa-toggle-on fa-9x"></i></p>
+                        <p class="card-text"><strong>Smart Switch:</strong> <span id="smartSwitch"></span></p>
+                    </div>
+                </div>
+                <div class="card clickable" id="intruderAlert-button">
+                    <div class="card-body">
+                        <p class="card-text"><i id="intruderAlert-icon" class="fas fa-exclamation fa-9x"></i></p>
+                        <p class="card-text"><strong>Intruder Alert:</strong> <span id="intruderAlert"></span></p> 
+                    </div>
+                </div>
                 <div class="card">
                     <div class="card-body">
                         <p class="card-text" id="nightLight-icon"><i class="fas fa-lightbulb fa-9x"></i></p>
@@ -42,20 +46,8 @@
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <p class="card-text"><i id="smartSwitch-icon" class="fas fa-toggle-on fa-9x"></i></p>
-                        <p class="card-text"><strong>Smart Switch:</strong> <span id="smartSwitch"></span></p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-body">
                         <p class="card-text"><i id="temperature-icon" class="fas fa-thermometer-half fa-9x"></i></p>
                         <p class="card-text"><strong>Temperature:</strong> <span id="temperature"></span></p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text"><i id="intruderAlert-icon" class="fas fa-exclamation fa-9x"></i></p>
-                        <p class="card-text"><strong>Intruder Alert:</strong> <span id="intruderAlert"></span></p> 
                     </div>
                 </div>
             </div>

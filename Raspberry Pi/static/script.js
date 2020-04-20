@@ -1,12 +1,12 @@
 // Define Color Variables
 var colors = {
-    red: "#DC3545", // old red: "#C23127",
-    yellow: "#FFC107", // old yellow: "#FFCC02",
+    red: "#DC3545",
+    yellow: "#FFC107",
     orange: "#FD7E14",
-    green: "#28A745", // old green: "#4BD964",
+    green: "#28A745",
     blue: "#007BFF",
-    disabled: "#6C757D", // old disabled: "#CCCCCC",
-    error: "#E83E8C" // old error: "#FF0080"
+    disabled: "#6C757D",
+    error: "#E83E8C"
 }
 
 // Function that updates values in HTML
@@ -33,12 +33,12 @@ function updateValues() {
     });
 }
 
-$("input").click(function(e) {
+$(".clickable").click(function(e) {
     e.preventDefault();
-    $.ajax({
+    var AJAX = $.ajax({
         type: "POST",
         url: "/",
-        data: $(this)
+        data: {id: $(this).attr("id")}
     });
 });
 
@@ -141,7 +141,26 @@ function updateTemp(state) {
     document.getElementById('temperature-icon').style.color = color;
 }
 
-// Execute updateValues() on load of webpage
-$(document).ready(updateValues())
-// Execute updateValues() every 300 milliseconds after webpage is loaded
-setInterval(updateValues, 1000);
+$(document).ready(function(){
+    // Execute updateValues() on load of webpage
+    updateValues();
+    // Start the timer on webpage load
+    startTimer();
+    // When active window, start the timer
+    window.addEventListener('focus',startTimer);
+    // When window in background, stop timer
+    window.addEventListener('blur',stopTimer);
+})
+
+// Create variable that updates webpage
+var interval;
+
+// Starts timer
+function startTimer() {
+    interval = setInterval(updateValues, 500);
+}
+
+// Clear timer
+function stopTimer() {
+    clearInterval(interval);
+}

@@ -24,10 +24,10 @@ def home():
         ser.flushOutput() # Clean output (prevents overloading of serial port)
         ser.flushInput() # Clean input
         if request.method == 'POST': # If button pressed
-            if request.form.get('smart_switch') == 'Smart Switch':
+            if request.form.get('id') == 'smartSwitch-button':
                 char = str.encode('s')
                 for _ in range(WRITE_TIMES): ser.write(char) # Send char to Arduino
-            elif request.form.get('intruder_alert') == 'Intruder Alert':
+            elif request.form.get('id') == 'intruderAlert-button':
                 char = str.encode('i')
                 for _ in range(WRITE_TIMES + 5): ser.write(char) # Send char to Arduino
     return render_template('index.html') # Returns the website
