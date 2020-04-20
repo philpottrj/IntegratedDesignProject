@@ -8,6 +8,23 @@ The purpose of this code is to create a smart home device run by Arduino.  This 
 
 ## Changelog
 
+### v1.0 - Milestone 4
+- Added HTTPS to website
+- Password-protected website using Nginx
+	- Default User: ID-User
+	- Default Password: secure-password
+- Website host moved from Windows PC to Raspberry Pi
+- Changed port forwarding agent from ngrok to localhost.run
+- Added garbage collection on web server to prevent overloading
+- Website and Android now have a grid status page
+- Android application now uses a material design theme
+- Android application and website can now be used simultaneously
+
+### v0.3 - Milestone 3
+- Implemented Bluetooth connectivity
+- Developed Android Application for controlling the Arduino from a cell phone
+- Utilized ngrok as port forwarding agent
+
 ### v0.25 - Website Integration (Prerelease)
 - Implemented WiFi connectivity
 - Built Python Flask application to handle Button presses remotely
@@ -27,7 +44,5 @@ The purpose of this code is to create a smart home device run by Arduino.  This 
 
 ## Implemented Features
 - [x] Wireless connectivity
-
-## Planned Features
-- [ ] Bluetooth functionality
-- [ ] Encryption capability
+- [x] Bluetooth functionality
+- [x] Encryption capability
