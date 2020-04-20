@@ -19,6 +19,7 @@
 #define NIGHT_INPUT 1 // night light analog light sensor input
 #define SWITCH_INPUT 2 // smart switch analog input
 #define WEATHER_INPUT 3 // weather station temperature analog input
+#define NIGHT_OUTPUT A4 // night light output LED pin
 
 // digital pin definitions
 #define INTRUDER_LED 13 // intruder alert LED
@@ -33,7 +34,6 @@
 #define LCD_PIN2 4 // LCD pin 2
 #define LCD_PIN1 3 // LCD pin 1
 #define INTRUDER_SOUND 2 // intruder speaker output
-#define NIGHT_OUTPUT 1 // night light output LED pin
 
 // global variables
 bool LCD_ON = false;
