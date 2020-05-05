@@ -35,7 +35,7 @@ function updateValues() {
 
 $(".clickable").click(function(e) {
     e.preventDefault();
-    var AJAX = $.ajax({
+    $.ajax({
         type: "POST",
         url: "/",
         data: {id: $(this).attr("id")}
